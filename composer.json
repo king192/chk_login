@@ -1,0 +1,17 @@
+{
+    "name": "king192/chk_login",
+    "description": "php xhprof",
+    "authors": [
+        {
+            "name": "xhq",
+            "email": "i@iyouths.org"
+        }
+    ],
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "king192\\chk_login\\": "src/"
+        }
+    }
+}
