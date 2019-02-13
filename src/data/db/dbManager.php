@@ -34,7 +34,6 @@ class dbManager
             $charset = $dbConfig['charset'];
             $pconnect = $dbConfig['pconnect'];
 
-            LogHelper::printInfo(['dbConfig', $dbConfig]);
             $instance = new dbHelper($dbtype, $host, $dbname, $port, $username, $password, $charset, $pconnect);
             self::$_instance[$dbType] = $instance;
         }

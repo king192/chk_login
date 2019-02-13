@@ -11,15 +11,15 @@ class history {
 		}
 		$this->_instance = $_instance;
 	}
-	public function getLastLoginTimeByUsername() {
-		return $this->_instance->getLastLoginTimeByUsername();
+	public function getLastLoginTimeByUsername($username) {
+		return $this->_instance->getLastLoginTimeByUsername($username);
 	}
 
-	public function getLoginRate() {
-		return $this->_instance->getLoginRate();
+	public function getLoginRate($username) {
+		return $this->_instance->getLoginRate($username);
 	}
 
-	public function insertLoginRecord() {
-		return $this->_instance->insertLoginRecord();
+	public function insertLoginRecord($userID, $username, $status, $isVerify) {
+		return $this->_instance->insertLoginRecord($userID, $username, $status, $isVerify);
 	}
 }

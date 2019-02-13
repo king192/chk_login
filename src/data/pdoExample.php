@@ -20,7 +20,8 @@ class pdoExample extends data {
     }
 
     public function getLastLoginTimeByUsername($username) {
-        $res = dbManager::getMysql($this->options)->queryRow('select createTime from ' . $this->table . ' where username = ' . $username . ' and loginVerify = ' . Chk_login::LOGIN_VERIFY['YES'] . ' order by createTime desc');
+        $sql = 'select createTime from ' . $this->table . ' where username = ' . $username . ' and loginVerify = ' . Chk_login::LOGIN_VERIFY['YES'] . ' order by createTime desc limit 1';
+        $res = dbManager::getMysql($this->options)->queryRow($sql);
         return $res;
 	}
 
@@ -31,7 +32,7 @@ class pdoExample extends data {
             'createTime' => ['egt', (time() - Chk_login::TRY_TIME)],
         ];
         $where = dbManager::getMysql($this->options)->makeWhere($where);
-        $res = dbManager::getMysql($this->options)->queryRow('select count(1) as cnt from ' . MysqlConfig::Table_web_admin_login_history . $where . ' group by username');
+        $res = dbManager::getMysql($this->options)->queryRow('select count(1) as cnt from ' . $this->table . $where . ' group by username');
         return $res;
 	}
 

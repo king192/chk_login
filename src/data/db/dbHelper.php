@@ -133,7 +133,7 @@ final class dbHelper
     public function update($tableName, $arrayDataValue, $where = '')
     {
         $this->checkFields($tableName, $arrayDataValue);
-        FunctionHelper::arrayStringToDB($arrayDataValue);
+        $this->arrayStringToDB($arrayDataValue);
         $strSql = '';
         foreach ($arrayDataValue as $key => $value) {
             $strSql .= ", `$key`='$value'";
@@ -159,7 +159,7 @@ final class dbHelper
     public function insert($tableName, $arrayDataValue)
     {
         $this->checkFields($tableName, $arrayDataValue);
-        FunctionHelper::arrayStringToDB($arrayDataValue);
+        $this->arrayStringToDB($arrayDataValue);
         $strSql = "INSERT INTO `$tableName` (`" . implode('`,`', array_keys($arrayDataValue)) . "`) VALUES ('" . implode("','", $arrayDataValue) . "')";
         $this->log($strSql);
         $result = $this->pdo->exec($strSql);
@@ -176,7 +176,7 @@ final class dbHelper
     public function replace($tableName, $arrayDataValue)
     {
         $this->checkFields($tableName, $arrayDataValue);
-        FunctionHelper::arrayStringToDB($arrayDataValue);
+        $this->arrayStringToDB($arrayDataValue);
         $strSql = "REPLACE INTO `$tableName`(`" . implode('`,`', array_keys($arrayDataValue)) . "`) VALUES ('" . implode("','", $arrayDataValue) . "')";
         $result = $this->pdo->exec($strSql);
         $this->getPDOError();
@@ -415,12 +415,12 @@ final class dbHelper
 
     private function outputError($msg)
     {
-        LogHelper::printError($msg);
+//        LogHelper::printError($msg);
     }
 
     private function log($msg)
     {
-        LogHelper::printLog(strtoupper($this->dbtype), $msg);
+
     }
 
     public function getPDO() {
@@ -460,6 +460,10 @@ final class dbHelper
         return $res;
     }
     public function makePdoWhere($arrWhere){
+
+    }
+
+    protected function arrayStringToDB($field) {
 
     }
 }

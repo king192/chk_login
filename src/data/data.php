@@ -2,9 +2,9 @@
 namespace king192\chk_login\data;
 
 abstract class data {
-	abstract function getLastLoginTimeByUsername();
+	abstract function getLastLoginTimeByUsername($username);
 
-	abstract function getLoginRate();
+	abstract function getLoginRate($username);
 
-	abstract function insertLoginRecord();
+	abstract function insertLoginRecord($userID, $username, $status, $isVerify);
 }

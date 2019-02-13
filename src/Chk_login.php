@@ -2,6 +2,7 @@
 namespace king192\chk_login;
 
 use king192\chk_login\data\history;
+use king192\chk_login\data\pdoExample;
 
 class Chk_login {
 	const SUCCESS_CODE = 1;
@@ -36,7 +37,7 @@ class Chk_login {
     protected function getDataInstance() {
         $class = $this->data['dataInstanceData']['class'];
         $obj = new $class();
-        if (($obj) instanceof king192\chk_login\data\pdoExample) {
+        if (($obj) instanceof pdoExample) {
             $obj->setParam($this->data['dataInstanceData'], $this->data['table']);
         }
 
@@ -77,7 +78,7 @@ class Chk_login {
 //        $where = AgentModel::getInstance()->makeWhere($where);
 //        $res = M()->query('select count(1) as cnt from ' . MysqlConfig::Table_web_admin_login_history . $where . ' group by username');
         $res = $this->dataInstance->getLoginRate($username);
-        return ['code' => self::SUCCESS_CODE, 'msg' => 'ok', 'data' => (int)$res['0']['cnt']];
+        return ['code' => self::SUCCESS_CODE, 'msg' => 'ok', 'data' => (int)$res['cnt']];
     }
 
     public function loginRecord($username, $status, $userID = 0, $isVerify = self::LOGIN_VERIFY['YES']) {
