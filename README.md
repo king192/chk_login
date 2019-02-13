@@ -41,3 +41,14 @@ if (isset($_POST) && !empty($_POST)) {
 }
 echo 'hh';
 ```
+开发说明：
+直接vendor/king192目录下git clone,网站根目录的composer.json加入以下，composer dumpautoload。
+```
+{
+    "autoload": {
+        "psr-4": {
+            "king192\\chk_login\\": "\\vendor\\king192\\chk_login\\src/"
+        }
+    }
+}
+```
