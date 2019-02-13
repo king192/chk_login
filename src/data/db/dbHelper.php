@@ -477,8 +477,13 @@ final class dbHelper
     }
     public function makePdoWhere($arrWhere){
         foreach ($arrWhere as $k => $v) {
-            $strWhere[$k] = ':' . $k;
-            $bindWhere[':' . $k] = $v;
+            if (is_array($v)) {
+                $strWhere[$k] = [$v[0], ':' . $k];
+                $bindWhere[':' . $k] = $v[1];
+            } else {
+                $strWhere[$k] = ':' . $k;    
+                $bindWhere[':' . $k] = $v;            
+            }
         }
         return [
             'strWhere' => $this->makeWhere($strWhere, false),
