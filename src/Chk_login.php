@@ -18,11 +18,30 @@ class Chk_login {
 
     protected $data = [
     	'table' => 'web_admin_login_history',
-
+        'dataInstanceData' => [
+            'class' => 'king192\chk_login\data\pdoExample',
+            'dbtype' => '',
+            'host' => '',
+            'dbname' => '',
+            'port' => '',
+            'username' => '',
+            'password' => '',
+            'charset' => '',
+            'pconnect' => '',
+        ],
     ];
 
-    protected $dataFactory = null;
+    protected $dataInstance = null;
 
+    protected function getDataInstance() {
+        $class = $this->data['dataInstanceData']['class'];
+        $obj = new $class();
+        if (($obj) instanceof king192\chk_login\data\pdoExample) {
+            $obj->setParam($this->data['dataInstanceData'], $this->data['table']);
+        }
+
+        $this->dataInstance = $obj;
+    }
 	public static function test() {
 		echo 'hi';
 	}
@@ -38,8 +57,8 @@ class Chk_login {
     public function limitLogin($username, $limit = 5) {
         $loginTime = $this->getFailLoginRate($username)['data'];
         if ($loginTime > $limit) {
-        	$sql = 'select createTime from ' . $this->data['table'] . ' '
-            $res = M()->table(MysqlConfig::Table_web_admin_login_history)->where(['username' => $username, 'loginVerify' => self::LOGIN_VERIFY['YES']])->order('createTime desc')->getField('createTime');
+//            $res = M()->table(MysqlConfig::Table_web_admin_login_history)->where(['username' => $username, 'loginVerify' => self::LOGIN_VERIFY['YES']])->order('createTime desc')->getField('createTime');
+            $res = $this->dataInstance->getLastLoginTimeByUsername($username);
 //            var_export((time() - (int)$res));
             $time = (self::TRY_TIME - (time() - (int)$res));
             $time = $this->friendTime($time);
@@ -49,24 +68,26 @@ class Chk_login {
     }
 
     protected function getFailLoginRate($username) {
-        $where = [
-            'username' => $username,
-            'loginStatus' => self::LOGIN_STATUS['FAIL'],
-            'createTime' => ['egt', (time() - self::TRY_TIME)],
-        ];
-        $where = AgentModel::getInstance()->makeWhere($where);
-        $res = M()->query('select count(1) as cnt from ' . MysqlConfig::Table_web_admin_login_history . $where . ' group by username');
+//        $where = [
+//            'username' => $username,
+//            'loginStatus' => self::LOGIN_STATUS['FAIL'],
+//            'createTime' => ['egt', (time() - self::TRY_TIME)],
+//        ];
+//        $where = AgentModel::getInstance()->makeWhere($where);
+//        $res = M()->query('select count(1) as cnt from ' . MysqlConfig::Table_web_admin_login_history . $where . ' group by username');
+        $res = $this->dataInstance->getLoginRate($username);
         return ['code' => self::SUCCESS_CODE, 'msg' => 'ok', 'data' => (int)$res['0']['cnt']];
     }
 
     public function loginRecord($username, $status, $adminID = 0, $isVerify = self::LOGIN_VERIFY['YES']) {
-        $res = M()->table(MysqlConfig::Table_web_admin_login_history)->add([
-            'adminID' => $adminID,
-            'username' => $username,
-            'loginStatus' => $status,
-            'loginVerify' => $isVerify,
-            'createTime' => time(),
-        ]);
+//        $res = M()->table(MysqlConfig::Table_web_admin_login_history)->add([
+//            'adminID' => $adminID,
+//            'username' => $username,
+//            'loginStatus' => $status,
+//            'loginVerify' => $isVerify,
+//            'createTime' => time(),
+//        ]);
+        $res = $this->dataInstance->insertLoginRecord($userID, $username, $status, $isVerify);
         if (!$res) {
 
         }

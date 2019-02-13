@@ -20,8 +20,9 @@ class dbManager
      * @param $dbConfig
      * @return mixed|dbHelper
      */
-    private static function getInstance($dbType, $dbConfig)
+    private static function getInstance($dbConfig)
     {
+        $dbType = md5(serialize($dbConfig));
         $instance = isset(self::$_instance[$dbType]) ? self::$_instance[$dbType] : null;
         if (!$instance instanceof dbHelper) {
             $dbtype = $dbConfig['dbtype'];
@@ -46,9 +47,9 @@ class dbManager
      * 主要的数据库
      * @return mixed|dbHelper
      */
-    public static function getMysql()
+    public static function getMysql($options)
     {
-        return self::getInstance(ConnectConfig::MYSQL_TYPE_MASTER, ConnectConfig::MYSQL_CONFIG_MASTER);
+        return self::getInstance($options);
     }
 
     /**
