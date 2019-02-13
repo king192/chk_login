@@ -110,10 +110,20 @@ final class dbHelper
      * @param $strSql
      * @return mixed|array
      */
-    public function queryRow($strSql)
+    public function queryRow($strSql, $bindParam = [])
     {
         $this->log($strSql);
-        $record_set = $this->pdo->query($strSql);
+        if (empty($bindParam)) {
+            $record_set = $this->pdo->query($strSql);
+        } elseif (is_array($bindParam)) {
+            $record_set = $this->pdo->prepare($strSql);
+            foreach ($bindParam as $k => $v) {
+                $record_set->bindParam($k, $v);
+            }
+            $record_set->execute();
+        } else {
+            throw new \Exception("bindParam error");
+        }
         $this->getPDOError();
         $result = [];
         if ($record_set) {
@@ -460,7 +470,14 @@ final class dbHelper
         return $res;
     }
     public function makePdoWhere($arrWhere){
-
+        foreach ($arrWhere as $k => $v) {
+            $strWhere[$k] = ':' . $k;
+            $bindWhere[':' . $k] = $v;
+        }
+        return [
+            'strWhere' => $this->makeWhere($strWhere),
+            'arrBindWhere' => $bindWhere,
+        ];
     }
 
     protected function arrayStringToDB($field) {
