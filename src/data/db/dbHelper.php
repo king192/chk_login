@@ -172,9 +172,14 @@ final class dbHelper
     {
         $this->checkFields($tableName, $arrayDataValue);
         $this->arrayStringToDB($arrayDataValue);
-        $strSql = "INSERT INTO `$tableName` (`" . implode('`,`', array_keys($arrayDataValue)) . "`) VALUES ('" . implode("','", $arrayDataValue) . "')";
+        if (false) {
+            $strSql = "INSERT INTO `$tableName` (`" . implode('`,`', array_keys($arrayDataValue)) . "`) VALUES ('" . implode("','", $arrayDataValue) . "')";
+            $result = $this->pdo->exec($strSql);
+        } else {
+            $strSql = "INSERT INTO `$tableName` (`" . implode('`,`', array_keys($arrayDataValue)) . "`) VALUES (" . implode(",", array_fill(0, count($arrayDataValue), '?')) . ")";
+            $result = $this->pdo->prepare($strSql)->execute(array_values($arrayDataValue));
+        }
         $this->log($strSql);
-        $result = $this->pdo->exec($strSql);
         $this->getPDOError();
         return $result;
     }
