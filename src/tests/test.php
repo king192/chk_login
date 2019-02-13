@@ -21,8 +21,9 @@ class test {
     }
 
     public function getData() {
+        $id = isset($_GET['id']) ? $_GET['id'] : 1;
         $arrWhere = [
-            'id' => 1,
+            'id' => $id,
         ];
 
         $where = dbManager::getMysql($this->dbData)->makePdoWhere($arrWhere);
