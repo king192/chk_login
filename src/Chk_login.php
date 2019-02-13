@@ -1,21 +1,44 @@
 <?php
 namespace king192\chk_login;
 
+use king192\chk_login\data\history;
+
 class Chk_login {
 	const SUCCESS_CODE = 1;
 	const ERROR_CODE = 0;
-	const TRY_TIME = 5;
+    const LOGIN_STATUS = [
+        'SUCCESS' => 1,
+        'FAIL' => 0,
+    ];
+    const LOGIN_VERIFY = [
+        'YES' => 1,
+        'NO' => 0,
+    ];
+    const TRY_TIME = 300;
+
+    protected $data = [
+    	'table' => 'web_admin_login_history',
+
+    ];
+
+    protected $dataFactory = null;
+
 	public static function test() {
 		echo 'hi';
 	}
-	public function __construct($options) {
-
+	public function __construct($options = []) {
+		if (!is_array($options)) {
+			throw new \Exception("param need array");
+			
+		}
+		$this->data = array_merge($this->data, $options);
 	}
 
 
     public function limitLogin($username, $limit = 5) {
         $loginTime = $this->getFailLoginRate($username)['data'];
         if ($loginTime > $limit) {
+        	$sql = 'select createTime from ' . $this->data['table'] . ' '
             $res = M()->table(MysqlConfig::Table_web_admin_login_history)->where(['username' => $username, 'loginVerify' => self::LOGIN_VERIFY['YES']])->order('createTime desc')->getField('createTime');
 //            var_export((time() - (int)$res));
             $time = (self::TRY_TIME - (time() - (int)$res));
