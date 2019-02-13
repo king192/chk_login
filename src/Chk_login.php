@@ -51,6 +51,7 @@ class Chk_login {
 			
 		}
 		$this->data = array_merge($this->data, $options);
+		$this->getDataInstance();
 	}
 
 
@@ -79,7 +80,7 @@ class Chk_login {
         return ['code' => self::SUCCESS_CODE, 'msg' => 'ok', 'data' => (int)$res['0']['cnt']];
     }
 
-    public function loginRecord($username, $status, $adminID = 0, $isVerify = self::LOGIN_VERIFY['YES']) {
+    public function loginRecord($username, $status, $userID = 0, $isVerify = self::LOGIN_VERIFY['YES']) {
 //        $res = M()->table(MysqlConfig::Table_web_admin_login_history)->add([
 //            'adminID' => $adminID,
 //            'username' => $username,
