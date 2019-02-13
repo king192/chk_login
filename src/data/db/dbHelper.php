@@ -114,8 +114,10 @@ final class dbHelper
     {
         $this->log($strSql);
         if (empty($bindParam)) {
+            echo 'a1';
             $record_set = $this->pdo->query($strSql);
         } elseif (is_array($bindParam)) {
+            echo 'a2';
             $record_set = $this->pdo->prepare($strSql);
             foreach ($bindParam as $k => $v) {
                 $record_set->bindParam($k, $v);
@@ -437,14 +439,18 @@ final class dbHelper
         return $this->pdo;
     }
 
-    public function makeWhere($arrWhere){
+    public function makeWhere($arrWhere, $quote = true){
         $where = [];
         if (empty($arrWhere)) {
             return '';
         }
         foreach ($arrWhere as $k => $v) {
             if (is_string($v) || is_numeric($v)) {
-                $where[] = $k . '="' . $v . '"';
+                if ($quote) {
+                    $where[] = $k . '="' . $v . '"';
+                } else {
+                    $where[] = $k . '=' . $v;
+                }
             } elseif (is_array($v)) {
                 switch ($v[0]) {
                     case 'gt':
@@ -475,7 +481,7 @@ final class dbHelper
             $bindWhere[':' . $k] = $v;
         }
         return [
-            'strWhere' => $this->makeWhere($strWhere),
+            'strWhere' => $this->makeWhere($strWhere, false),
             'arrBindWhere' => $bindWhere,
         ];
     }
