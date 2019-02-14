@@ -36,7 +36,6 @@ class pdoExample extends data {
             'createTime' => ['egt', (time() - Chk_login::TRY_TIME)],
         ];
         $where = dbManager::getMysql($this->options)->makePdoWhere($where);
-        // var_export($where);
         $res = dbManager::getMysql($this->options)->queryRow('select count(1) as cnt from ' . $this->table . $where['strWhere'] . ' group by username', $where['arrBindWhere']);
         return $res;
 	}

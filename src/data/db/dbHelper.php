@@ -120,7 +120,7 @@ final class dbHelper
             echo 'a2';
             $record_set = $this->pdo->prepare($strSql);
             foreach ($bindParam as $k => $v) {
-                $record_set->bindParam($k, $v);
+                $record_set->bindValue($k, $v);
             }
             $record_set->execute();
         } else {
