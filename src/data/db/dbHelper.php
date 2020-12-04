@@ -114,10 +114,8 @@ final class dbHelper
     {
         $this->log($strSql);
         if (empty($bindParam)) {
-            echo 'a1';
             $record_set = $this->pdo->query($strSql);
         } elseif (is_array($bindParam)) {
-            echo 'a2';
             $record_set = $this->pdo->prepare($strSql);
             foreach ($bindParam as $k => $v) {
                 $record_set->bindValue($k, $v);
